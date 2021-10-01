@@ -18,12 +18,14 @@ const Form = ({
       placeholder="Usuário ou Organização"
       onChange={(e) => changeUser(e.target.value)}
     />
-    <button className="searchButton" onClick={buttonAction}>
-      {loading ? <Spinner /> : "Search Repos"}
-    </button>
-    <button className="searchButton2" onClick={buttonAction2}>
-      {loading2 ? <Spinner /> : "Search Starred"}
-    </button>
+    <div classNamne="buttonsContainer">
+      <button className="searchButton" onClick={buttonAction}>
+        {loading ? <Spinner /> : "Repos"}
+      </button>
+      <button className="searchButton2" onClick={buttonAction2}>
+        {loading2 ? <Spinner /> : "Starred"}
+      </button>
+    </div>
 
     <p className="errorText">{error}</p>
   </div>

@@ -3,9 +3,13 @@ import StarredItem from "./Components/StarredItem";
 
 const StarredList = ({ starreds }) => (
   <div className="starredsListContainer">
-    {starreds.map((starred) => (
-      <StarredItem starred={starred} />
-    ))}
+    {starreds.length === 0 ? (
+      <span>"Usuário sem starred"</span>
+    ) : (
+      starreds.map((starred) => (
+        <StarredItem key={starred.Id} starred={starred} />
+      ))
+    )}
   </div>
 );
 
