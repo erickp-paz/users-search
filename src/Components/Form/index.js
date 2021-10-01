@@ -1,11 +1,11 @@
 import React from "react";
+
 import Spinner from "../Spinner";
 
 const Form = ({
   user,
   loading,
   loading2,
-  error,
   buttonAction,
   buttonAction2,
   changeUser,
@@ -26,8 +26,6 @@ const Form = ({
         {loading2 ? <Spinner /> : "Starred"}
       </button>
     </div>
-
-    <p className="errorText">{error}</p>
   </div>
 );
 

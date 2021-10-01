@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import "./App.css";
-import StarredList from "./Components/StarredList";
+
+import Header from "./Components/Header";
 import RepoList from "./Components/RepoList";
 import UserInfo from "./Components/UserInfo";
+import StarredList from "./Components/StarredList";
+
+import "./App.css";
 
 export default function Users() {
   const location = useLocation();
-  const [repos, setRepos] = useState([]);
-  const [starreds, setStarreds] = useState([]);
   const [user, setUser] = useState([]);
+  const [repos, setRepos] = useState([]);
+  const [error, setError] = useState("");
+  const [starreds, setStarreds] = useState([]);
+  const [notLoad, setNotLoad] = useState(false);
+
   async function handleUser() {
     try {
       const { data: _user } = await axios.get(
         `https://api.github.com/users${location.pathname}`,
         {
           headers: {
-            Authorization: "token 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",
+            Authorization: `token ${process.env.REACT_APP_TOKEN}`,
           },
         }
       );
@@ -25,7 +31,7 @@ export default function Users() {
         `https://api.github.com/users${location.pathname}/repos`,
         {
           headers: {
-            Authorization: "token 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",
+            Authorization: `token ${process.env.REACT_APP_TOKEN}`,
           },
         }
       );
@@ -33,7 +39,7 @@ export default function Users() {
         `https://api.github.com/users${location.pathname}/starred`,
         {
           headers: {
-            Authorization: "token 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",
+            Authorization: `token ${process.env.REACT_APP_TOKEN}`,
           },
         }
       );
@@ -41,21 +47,31 @@ export default function Users() {
       setStarreds(_starreds);
       setRepos(_repos);
       setUser(_user);
+      setNotLoad(true);
     } catch (error) {
-      console.log(error);
+      setError("Usuário não encontrado");
     }
   }
+
   useEffect(() => {
     handleUser();
     console.log("renderizou a pagina");
   }, []);
+
   return (
     <div className="Users">
-      <UserInfo user={user} />
-      <div className="content">
-        <RepoList repos={repos} />
-        <StarredList starreds={starreds} />
-      </div>
+      <Header error={error} />
+      {notLoad ? (
+        <>
+          <UserInfo user={user} />
+          <div className="content">
+            <RepoList repos={repos} />
+            <StarredList starreds={starreds} />
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

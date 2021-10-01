@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./App.css";
 
 import Form from "./Components/Form";
+import Header from "./Components/Header";
 import RepoList from "./Components/RepoList";
 import StarredList from "./Components/StarredList";
 
+import "./App.css";
+
 export default function App() {
   const [user, setUser] = useState("");
+  const [error, setError] = useState("");
   const [repos, setRepos] = useState([]);
   const [starreds, setStarreds] = useState([]);
-  const [error, setError] = useState("");
+  const [notLoad, setNotLoad] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
 
@@ -25,7 +28,7 @@ export default function App() {
         `https://api.github.com/users/${user}/${info}`,
         {
           headers: {
-            Authorization: "token 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",
+            Authorization: `token ${process.env.REACT_APP_TOKEN}`,
           },
         }
       );
@@ -39,6 +42,7 @@ export default function App() {
       setError("");
       setLoading(false);
       setLoading2(false);
+      setNotLoad(true);
     } catch (error) {
       console.log(error);
       setError("Usuário não encontrado");
@@ -51,21 +55,27 @@ export default function App() {
 
   return (
     <div className="App">
+      <Header error={error} />
       <Form
         changeUser={(value) => setUser(value)}
         user={user}
-        error={error}
         loading={loading}
         loading2={loading2}
         buttonAction={() => handleUser("repos")}
         buttonAction2={() => handleUser("starred")}
       />
-      <div className="content">
-        <RepoList repos={repos} />
-      </div>
-      <div className="content">
-        <StarredList starreds={starreds} />
-      </div>
+      {notLoad ? (
+        <>
+          <div className="content">
+            <RepoList repos={repos} />
+          </div>
+          <div className="content">
+            <StarredList starreds={starreds} />
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
